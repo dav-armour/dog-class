@@ -1,3 +1,6 @@
+# Run 'gem install geocoder'
+require 'geocoder'
+
 class Dog
   attr_accessor :name, :age, :location, :walks
   def initialize(name, age, location)
@@ -13,7 +16,13 @@ class Dog
   end
 
   def walk(location, distance)
-    @walks << { :location => location, :distance => distance, :time => Time.now.strftime("%d/%m/%Y %I:%M%p") }
+    geocode = Geocoder.search(location).first
+    @walks << {
+      :location => location,
+      :distance => distance,
+      :time => Time.now.strftime("%d/%m/%Y %I:%M%p"),
+      :geocode => geocode
+    }
     self
   end
 
@@ -22,8 +31,8 @@ class Dog
     puts "I have been for #{walk_count} walks today"
     @walks.each do |walk_hash|
       output = "Time: #{walk_hash[:time]}".ljust(30)
-      output += "Location: #{walk_hash[:location]}".ljust(25)
-      output += "Distance: #{walk_hash[:distance]}km"
+      output += "Distance: #{walk_hash[:distance]}km".ljust(20)
+      output += "Location: #{walk_hash[:location]} #{walk_hash[:geocode].coordinates}"
       puts output
     end
   end
@@ -36,9 +45,9 @@ end
 
 oldDog = Dog.new("Jester", 12, "Sydney")
 oldDog.speak
-puts oldDog.location
-oldDog.walk('sydney', 20)
-oldDog.walk('sydney', 5)
-oldDog.walk('brisbane', 30)
+puts "#{oldDog.name} is from #{oldDog.location}"
+oldDog.walk('Sydney', 20)
+oldDog.walk('Sydney', 5)
+oldDog.walk('Brisbane', 30)
 oldDog.display_walks
 puts "Total Distance: #{oldDog.total_distance}km"

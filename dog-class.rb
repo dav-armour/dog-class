@@ -32,7 +32,8 @@ class Dog
     @walks.each do |walk_hash|
       output = "Time: #{walk_hash[:time]}".ljust(30)
       output += "Distance: #{walk_hash[:distance]}km".ljust(20)
-      output += "Location: #{walk_hash[:location]} #{walk_hash[:geocode].coordinates}"
+      output += "Location: #{walk_hash[:location]}".ljust(20)
+      output += "#{walk_hash[:geocode].coordinates}"
       puts output
     end
   end
